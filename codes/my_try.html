@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>tracking.js - face hello world</title>
+  
+  <script src="../build/tracking-min.js"></script>
+  <script src="../build/data/face-min.js"></script>
+
+  <style>
+  .rect {
+    border: 2px solid #a64ceb;
+    left: -1000px;
+    position: absolute;
+    top: -1000px;
+  }
+
+  </style>
+
+</head>
+
+<body>
+  
+  <div class="demo-frame">
+    <div class="demo-container">
+      <img id="img" src="faces.jpg" name="my_image" />
+      <canvas id="myCanvas" width="578" height="200"></canvas>
+    </div>
+  </div>
+
+  <script>
+    window.onload = function() {
+      var img = document.getElementById('img');
+
+      var tracker = new tracking.ObjectTracker(['face']);
+      tracker.setStepSize(1.7);
+
+      tracking.track('#img', tracker);
+
+      tracker.on('track', function(event) {
+        event.data.forEach(function(rect) {
+          window.plot(rect.x, rect.y, rect.width, rect.height);
+
+          ////////////////////////////////////////////
+
+      var canvas = document.getElementById('myCanvas');
+      var context = canvas.getContext('2d');
+      var imageObj = new Image();
+
+      imageObj.onload = function() {
+        // draw cropped image
+        var sourceX = (img.offsetLeft + rect.x) - 20;
+        var sourceY = (img.offsetTop + rect.y) - 40;
+        var sourceWidth = rect.width + 40;
+        var sourceHeight = rect.height + 50;
+        var destWidth = sourceWidth ;
+        var destHeight = sourceHeight;
+        var destX = 100//canvas.width / 2 - destWidth / 2;
+        var destY = 10//canvas.height / 2 - destHeight / 2;
+
+        var new_im = context.drawImage(imageObj, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
+        demo-container.appendChild(new_im);
+      };
+      imageObj.src = my_image.src;
+
+          ////////////////////////////////////////////
+
+        });
+      });
+
+      window.plot = function(x, y, w, h) {
+        var rect = document.createElement('div');
+        document.querySelector('.demo-container').appendChild(rect);
+        rect.classList.add('rect');
+        rect.style.width = w + 'px';
+        rect.style.height = h + 'px';
+        rect.style.left = (img.offsetLeft + x) + 'px';
+        rect.style.top = (img.offsetTop + y) + 'px';
+      };
+    };
+  </script>
+
+</body>
+</html>
