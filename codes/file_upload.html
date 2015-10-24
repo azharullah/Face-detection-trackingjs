@@ -1,0 +1,168 @@
+<!doctype html>
+<html>
+  
+    <head>
+
+          <meta charset="utf-8">
+          
+          <title>Face detection</title>
+
+          <script src="../build/tracking-min.js"></script>
+          <script src="../build/data/face-min.js"></script>
+          <script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
+          <script type="text/javascript" src="js/jquery-ui-1.11.4/jquery-ui.js"></script>
+          <script src="js/jquery-ui-1.11.4/external/jquery/jquery.js"></script>
+          <script src="js/jquery-ui-1.11.4/jquery-ui.js"></script>
+          <script type="text/javascript" src="main2.js"></script>
+
+          <style type="text/css">
+
+          	body
+			{
+				background: url("bg.jpg");
+				background-repeat: no-repeat;
+			}
+
+          	.rect 
+			{
+			  border: 2px solid #a64ceb;
+			  left: -1000px;
+			  position: absolute;
+			  top: -1000px;
+			}
+
+              #report
+              {
+                position: fixed;
+                bottom: 20px;
+                right: 50px;
+              }
+
+              #another
+              {
+                position: fixed;
+                bottom: 20px;
+              }
+
+          </style>
+
+    </head>
+
+    <body>
+
+        <div id="main" class="demo-frame">
+            <div class="demo-container" id='container'>
+              
+              <input id="input" type="file" onchange="previewFile()" style="float:left;">
+              <input id="detect" type="submit" value="Detect" onclick="facetracker()" style="position:fixed;"> <br>
+              <img src="" id="img" name="my_image"> <br>
+
+            </div>
+        </div>
+
+        <script>
+
+            var global_index = -1;
+
+           function previewFile()
+           {
+               var preview = document.querySelector('img'); //selects the query named img
+               var file    = document.querySelector('input[type=file]').files[0]; //sames as here
+               var reader  = new FileReader();
+
+               reader.onloadend = function () 
+               {
+                   preview.src = reader.result;
+               }
+
+               if (file) 
+               {
+                   reader.readAsDataURL(file); //reads the data as a URL
+               } 
+               else 
+               {
+                   preview.src = "";
+               }
+          }
+
+          function facetracker() 
+          {
+              var img = document.getElementById('img');
+              var tmp = 0;
+
+              var tracker = new tracking.ObjectTracker(['face']);
+              tracker.setStepSize(1.7);
+
+              tracking.track('#img', tracker);
+              tracker.on('track', function(event) 
+              {
+                var index = 0;
+                event.data.forEach(function(rect) 
+                {
+                    window.plot(rect.x, rect.y, rect.width, rect.height);
+
+          ////////////////////////////////////////////
+
+                    var canvas   = document.createElement('canvas');
+                    canvas.id = "mycanvas" + index;
+                    index=index+1;
+                    canvas.width='200';
+                    canvas.height='200';
+                    document.getElementById('container').appendChild(canvas);
+                    //console.log(img);
+                    //var canvas = document.getElementById('myCanvas');
+                    var context = canvas.getContext('2d');
+                    var imageObj = new Image();
+
+                    imageObj.onload = function() 
+                    {
+                        // draw cropped image
+                        var sourceX = (img.offsetLeft + rect.x) - 20;
+                        var sourceY = (img.offsetTop + rect.y) - 60;
+                        var sourceWidth = rect.width + 40;
+                        var sourceHeight = rect.height + 50;
+                        var destWidth = sourceWidth ;
+                        var destHeight = sourceHeight;
+                        var destX = 0 + tmp//canvas.width / 2 - destWidth / 2;
+                        var destY = 10//canvas.height / 2 - destHeight / 2;
+                        //tmp = tmp + 150;
+
+                        var new_im = context.drawImage(imageObj, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
+                        //demo-container.appendChild(new_im);
+
+                        global_index = index;
+                        //alert(global_index);
+
+                    };
+      
+                    imageObj.src = my_image.src;
+
+                    //alert(index);
+
+            ////////////////////////////////////////////
+
+                });
+					
+					alert("Scan complete... Found "+index+" faces in the image uploaded");
+
+          });
+
+                    window.plot = function(x, y, w, h) {
+                      var rect = document.createElement('div');
+                      document.querySelector('.demo-container').appendChild(rect);
+                      rect.classList.add('rect');
+                      rect.style.width = w + 'px';
+                      rect.style.height = h + 'px';
+                      rect.style.left = (img.offsetLeft + x) + 'px';
+                      rect.style.top = (img.offsetTop + y) + 'px';
+               };
+        };
+
+                    previewFile();  //calls the function named previewFile()
+                    //facetracker();
+
+        </script>
+
+    </body>
+
+</html>

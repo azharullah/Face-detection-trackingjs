@@ -1,0 +1,78 @@
+.rect 
+{
+  border: 2px solid #a64ceb;
+  left: -1000px;
+  position: absolute;
+  top: -1000px;
+}
+
+body
+{
+	background: url("bg.jpg");
+	background-repeat: no-repeat;
+}
+
+h1
+{
+	font-size: 40px;
+	color: navy;
+	font-weight: bold;
+	margin-bottom: 50px;
+}
+
+h2
+{
+	color: darkblue;
+	font-size: 30px;
+	margin-bottom: 5%;
+}
+
+p
+{
+	color: blue;
+	font-weight: bold;
+	margin-top: 2%;
+	margin-bottom: 2%;
+	font-size: 17px;
+}
+
+input#go
+{
+	width:70px; /*same as the height*/
+	height:50px; /*same as the width*/
+	background-color: lightblue;
+	border:1px solid lightblue; /*same colour as the background*/
+	color:blue;
+	font-size:1.6em;
+	/*set the border-radius at half the size of the width and height*/
+	-webkit-border-radius: 50px;
+	-moz-border-radius: 50px;
+	border-radius: 50px;
+	/*give the button a small drop shadow*/
+	-webkit-box-shadow: 0 0 10px rgba(0,0,0, .75);
+	-moz-box-shadow: 0 0 10px rgba(0,0,0, .75);
+	box-shadow: 2px 2px 15px rgba(0,0,0, .75);
+}
+
+input#go:hover
+{
+	background:aqua;
+	border:1px solid aqua;
+	/*reduce the size of the shadow to give a pushed effect*/
+	-webkit-box-shadow: 0px 0px 5px rgba(0,0,0, .75);
+	-moz-box-shadow: 0px 0px 5px rgba(0,0,0, .75);
+	box-shadow: 0px 0px 5px rgba(0,0,0, .75);
+}
+
+#report
+{
+	position: fixed;
+	bottom: 20px;
+	right: 50px;
+}
+
+#another
+{
+	position: fixed;
+	bottom: 20px;
+}
